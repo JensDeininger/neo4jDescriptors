@@ -1,0 +1,26 @@
+┌────────┐                                            ┌────────┐                       
+│        │ 1 ───────────── FOO_HAS_BAR ───────────> 1 │        │      
+│  Foo   │                                            │  Bar   │
+│        │ 1 <──────────── BAR_HAS_FOO ──────────── 1 │        │        
+└────────┘                                            └────────┘
+0..n   1..n                                          1..n   0..n
+ │      ^                                              ^     │
+ │      │                                              │     │
+ │      └─ HAS_FOO ─ 0..n ┌──────────┐ 0..n ─ HAS_BAR ─┘     │
+ │                        │   Keks   │                       │
+ └──── HAS_KEKS ───> 1..n └──────────┘ 1..n <── HAS_KEKS  ───┘
+                           │        ^                          					
+                      0..n │        │ 0..1
+                           │        │
+                        ┌──┘        └──┐
+                        │              │
+                         IS_SUB_KEKS_OF
+
+ReDesc                  Type             StartNode      EndNode       
+HasFooRelationDesc      HAS_FOO                         Foo
+HasBarRelationDesc      HAS_BAR                         Bar 
+FooHasBarRelationDesc   FOOBAR           Foo            Bar
+BarHasFooRelationDesc   BARFOO           Bar            Foo
+HasKeksRelationDesc     HAS_KEKS                        Keks
+IsSubKeksOfRelationDesc IS_SUB_KEKS_OF   Keks           Keks
+

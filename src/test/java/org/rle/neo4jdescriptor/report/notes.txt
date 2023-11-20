@@ -1,0 +1,13 @@
+public abstract class ReportBaseTest<T extends ReportBase>
+
+  public abstract class EntityReportTest<T extends EntityReport> extends ReportBaseTest<T>
+    
+    public class NodeReportTest extends EntityReportTest<NodeReport>
+
+    public class RelationshipReportTest  extends EntityReportTest<RelationshipReport>
+
+  public class NodeRelationReportTest extends ReportBaseTest<NodeRelationReport>
+
+  public class PropertyDescriptorReportTest  extends ReportBaseTest<PropertyDescriptorReport>
+
+  public class FullReportTest extends ReportBaseTest<FullReport>
