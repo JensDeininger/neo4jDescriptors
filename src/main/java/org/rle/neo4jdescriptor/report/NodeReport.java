@@ -29,6 +29,9 @@ public class NodeReport extends EntityReport {
 
   private static final String FAULTY_RELATIONS = "Faulty Relations";
 
+  protected static final String CPYHER_STRING =
+    "MATCH (n) WHERE elementId(n) = '%s' RETURN n";
+
   protected static final String NO_SUCH_LABEL =
     "NodeDescriptor contains no such Label as contingent";
 
@@ -175,9 +178,9 @@ public class NodeReport extends EntityReport {
     String header =
       gI +
       String.format(
-        "%s<%s> %s %s",
+        "%s(%s) %s %s",
         NODE,
-        dbId(),
+        String.format(CPYHER_STRING, dbId()),
         FAILED_TO_MATCH,
         nodeDescriptor().getClass().getSimpleName()
       );

@@ -14,7 +14,7 @@ public abstract class EntityReport extends ReportBase {
 
   // region stric strings
 
-  protected static final String FAILED_TO_MATCH = "Failed to match";
+  protected static final String FAILED_TO_MATCH = "failed to match";
 
   private static final String FAULTY_PROPERTIES = "Faulty properties";
 

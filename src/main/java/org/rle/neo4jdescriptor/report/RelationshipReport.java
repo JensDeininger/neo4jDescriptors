@@ -20,6 +20,9 @@ public class RelationshipReport extends EntityReport {
   protected static final String NO_SUCH_NODEDESCRIPTOR_SPECIFIED =
     "no such node descriptor specified";
 
+  private static final String CPYHER_STRING =
+    "MATCH (n)-[s]-(m) WHERE elementId(s) = '%s' RETURN n,m,s";
+
   private static final String FAULTY_STARTNODE = "Start node does not match";
 
   private static final String FAULTY_ENDNODE = "End node does not match";
@@ -138,9 +141,9 @@ public class RelationshipReport extends EntityReport {
     String header =
       gI +
       String.format(
-        "%s<%s> %s: %s",
+        "%s(%s) %s: %s",
         RELATIONSHIP,
-        dbId(),
+        String.format(CPYHER_STRING, dbId()),
         FAILED_TO_MATCH,
         mRelationshipDescriptor.getClass().getSimpleName()
       );
