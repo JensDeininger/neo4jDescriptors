@@ -1,12 +1,12 @@
 package org.rle.neo4jdescriptor.report;
 
-import org.rle.neo4jdescriptor.dto.report.RelationshipDescriptorReportDto;
-import org.rle.neo4jdescriptor.dto.report.NodeDescriptorReportDto;
-import org.rle.neo4jdescriptor.dto.report.FullReportDto;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.rle.neo4jdescriptor.EqualityUtils;
+import org.rle.neo4jdescriptor.dto.report.FullReportDto;
+import org.rle.neo4jdescriptor.dto.report.NodeDescriptorReportDto;
+import org.rle.neo4jdescriptor.dto.report.RelationshipDescriptorReportDto;
 import org.rle.neo4jdescriptor.repository.NodeRepository;
 import org.rle.neo4jdescriptor.repository.RelationshipRepository;
 
@@ -14,6 +14,11 @@ import org.rle.neo4jdescriptor.repository.RelationshipRepository;
 public class FullReport extends ReportBase {
 
   // region static strings
+
+  protected static final String SM_GLOBAL_HEADER =
+    "Validation report: Found %s problems";
+
+  protected static final String SM_DASH_LINE = "------------------------------";
 
   protected static final String SM_NODE_HEADER = "NodeDescriptor reports: ";
 
@@ -108,13 +113,12 @@ public class FullReport extends ReportBase {
     return excCount + nCount + rCount;
   }
 
-  private String nodeSection(String[] nodeRepBits) {
-    int buggerCount = nodeRepBits.length;
-    String sectionSummary = buggerCount == 0
+  private String nodeSection(String[] nodeRepBits, int errorCount) {
+    String sectionSummary = errorCount == 0
       ? SM_NO_PROBLEMS
-      : String.format(SM_FOUND_X_PROBLEMS, buggerCount);
+      : String.format(SM_FOUND_X_PROBLEMS, errorCount);
     String result = SM_NODE_HEADER + sectionSummary;
-    if (buggerCount != 0) {
+    if (errorCount != 0) {
       result =
         result +
         System.lineSeparator() +
@@ -123,13 +127,12 @@ public class FullReport extends ReportBase {
     return result;
   }
 
-  private String relationshipSection(String[] relRepBits) {
-    int buggerCount = relRepBits.length;
-    String sectionSummary = buggerCount == 0
+  private String relationshipSection(String[] relRepBits, int errorCount) {
+    String sectionSummary = errorCount == 0
       ? SM_NO_PROBLEMS
-      : String.format(SM_FOUND_X_PROBLEMS, buggerCount);
+      : String.format(SM_FOUND_X_PROBLEMS, errorCount);
     String result = SM_RELATIONSHIP_HEADER + sectionSummary;
-    if (buggerCount != 0) {
+    if (errorCount != 0) {
       result =
         result +
         System.lineSeparator() +
@@ -145,19 +148,30 @@ public class FullReport extends ReportBase {
     }
     String gI = globalIndent == null ? "" : globalIndent;
     String sI = subItemIndent == null ? "" : subItemIndent;
+    int nodeErrorCount = mNodeDescriptorReports
+      .stream()
+      .mapToInt(NodeDescriptorReport::errorCount)
+      .sum();
     String[] nodeRepBits = mNodeDescriptorReports
       .stream()
       .map(o -> o.print(gI + sI, sI))
       .filter(o -> o.length() > 0)
       .toArray(String[]::new);
+    int relErrorCount = mRelationshipDescriptorReports
+      .stream()
+      .mapToInt(RelationshipDescriptorReport::errorCount)
+      .sum();
     String[] relRepBits = mRelationshipDescriptorReports
       .stream()
       .map(o -> o.print(gI + sI, sI))
       .filter(o -> o.length() > 0)
       .toArray(String[]::new);
-    String nodeSection = gI + nodeSection(nodeRepBits);
-    String relSection = gI + relationshipSection(relRepBits);
-    return nodeSection + System.lineSeparator() + relSection;
+    String globalHeader = gI + String.format(SM_GLOBAL_HEADER, errorCount());
+    String nodeSection = gI + nodeSection(nodeRepBits, nodeErrorCount);
+    String relSection = gI + relationshipSection(relRepBits, relErrorCount);
+    String sep =
+      System.lineSeparator() + gI + SM_DASH_LINE + System.lineSeparator();
+    return String.join(sep, globalHeader, nodeSection, relSection);
   }
 
   @Override
