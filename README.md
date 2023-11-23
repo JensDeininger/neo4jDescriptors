@@ -23,3 +23,5 @@ In order to get started, you should look at the Procedure Project [Neo4j-Live-Ty
   - Creating relationships
   - Writing properties
   - Validating your graph schema
+ 
+To contact me, use deininger@recotech.de
